@@ -1,5 +1,5 @@
 # Ex.No:04   FIT ARMA MODEL FOR TIME SERIES
-# Date:23-03-2024 
+# Date: 
 
 ## AIM:
 To implement ARMA model in python.
@@ -23,95 +23,55 @@ axis limits.
 plot_acf and plot_pacf.
 
 ## PROGRAM:
-### Importing necessary libraries and loading and displaying the dataset:
 ```
-import pandas as pd
-import numpy as np
+from pandas import read_csv
+from pandas import datetime
 from matplotlib import pyplot
-from statsmodels.tsa.ar_model import AutoReg
-23from statsmodels.tsa.stattools import adfuller
-from statsmodels.tsa.arima.model import ARIMA
-from statsmodels.graphics.tsaplots import plot_pacf, plot_acf
-import sklearn.metrics
+from pandas.plotting import autocorrelation_plot
+from pandas import DataFrame
+from statsmodels.tsa.arima_model import ARIMA
+from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
+from statsmodels.tsa.arima_process import ArmaProcess
+import matplotlib.pyplot as plt
+import numpy as np
+import warnings
+warnings.filterwarnings('ignore')
+import matplotlib.pyplot as plt
+import numpy as np
 
-# Loading the dataset
-df = pd.read_csv("rainfall.csv")
+plt.rcParams['figure.figsize'] = [10, 7.5]
 
-# Exploring the dataset
-## Displaying the dataframe
-print("Dataset:")
-print(df)
-```
-
-### Extracting and Plotting the data the temperature data:
-```
-X = df['temp']
-print("\nTemperature Data:")
-print(X)
-print("\nTemperature Plot:")
-X.plot()
-```
-
-### Augmented Dickey-Fuller Test:
-```
-dtest = adfuller(X, autolag='AIC')
-print("\nAugmented Dickey-Fuller Test:")
-print("ADF:", dtest[0])
-print("P value:", dtest[1])
-print("No. of lags:", dtest[2])
-print("No. of observations used for ADF regression:", dtest[3])
-```
-
-### Train-Test Split and Model Fitting:
-```
-X_train = X[:len(X) - 15]
-X_test = X[len(X) - 15:]
-p = 3  
-q = 2  
-ARMA_model = ARIMA(X_train, order=(p, 0, q)).fit()
-print("\nARIMA Model Summary:")
-print(ARMA_model.summary())
-```
-
-### Autocorrelation and Partial Autocorrelation Plots and Making Predictions:
-```
-print("\nPartial Autocorrelation Plot:")
-pacf = plot_pacf(X, lags=25)
-print("\nAutocorrelation Plot:")
-acf = plot_acf(X, lags=25)
-pred = ARMA_model.predict(start=len(X_train), end=len(X_train) + len(X_test) - 1, dynamic=False)
-print("\nPredictions:")
-print(pred)
-```
-
-### Model Evaluation and Plotting Predictions:
-```
-mse = sklearn.metrics.mean_squared_error(X_test, pred) 
-rmse = mse ** 0.5
-print("\nRoot Mean Squared Error (RMSE):", rmse)
-print("\nTest Data vs Predictions:")
-X_test.plot(label='Test Data')
-pred.plot(label='Predictions')
-pyplot.legend()
-pyplot.show()
-print("Dataset:")
-print(df)
+ar1 = np.array([1,0.33])
+ma1 = np.array([1,0.9])
+ARMA_1 = ArmaProcess(ar1,ma1).generate_sample(nsample = 1000)
+plt.plot(ARMA_1)
+plt.title('Simulated ARMA(1,1) Process')
+plt.xlim([0, 200])
+plt.show()
+plot_acf(ARMA_1)
+plot_pacf(ARMA_1)
+ar2 = np.array([1, 0.33, 0.5])
+ma2 = np.array([1, 0.9, 0.3])
+ARMA_2 = ArmaProcess(ar2, ma2).generate_sample(nsample=10000)
+plt.plot(ARMA_2)
+plt.title('Simulated ARMA(2,2) Process')
+plt.xlim([0, 200])
+plt.show()
+plot_acf(ARMA_2)
+plot_pacf(ARMA_2)
 ```
 
 ## OUTPUT:
-### Partial Autocorrelation
-![1](https://github.com/Kishore00007/TSA_EXP4/assets/94233985/650bd462-4d7b-4240-b92f-ac1c15c7b8b6)
+![ts41](https://github.com/Kishore00007/TSA_EXP4/assets/94233985/011444ca-f817-4763-8fa6-596f543ec581)
 
-### Autocorrelation
-![2](https://github.com/Kishore00007/TSA_EXP4/assets/94233985/e6ecea3d-50be-480d-9fbb-dd41aa00f4ba)
+![ts411](https://github.com/Kishore00007/TSA_EXP4/assets/94233985/79fda7ce-265c-468c-8949-f6690e863d23)
 
+![ts42](https://github.com/Kishore00007/TSA_EXP4/assets/94233985/f7c04e07-26eb-46ad-8a93-9a8ec6b78c0f)
 
-### Prediction Graph:
-![3](https://github.com/Kishore00007/TSA_EXP4/assets/94233985/e374be55-bacb-47b7-b5b3-b526090d9d63)
+![ts43](https://github.com/Kishore00007/TSA_EXP4/assets/94233985/c9300f49-fcda-400b-9d52-71c9cab66c49)
 
+![ts44](https://github.com/Kishore00007/TSA_EXP4/assets/94233985/1450716a-36fc-4582-9154-2baa6b86e710)
 
-### Test:
-![4](https://github.com/Kishore00007/TSA_EXP4/assets/94233985/5a276dec-e7de-4163-b033-2a8c12ae9426)
 
 
 RESULT:
